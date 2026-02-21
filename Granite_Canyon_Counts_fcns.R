@@ -1,11 +1,195 @@
 
 # define some functions
 
+S1.S2.trace.plots <- function(ver, jm, jags.data, new.Rhat, start.year){
+  par.idx = c(1:jags.data$n.year)
+  
+  # S1 and S2 trace plots
+  if (grepl("v1(?!\\d[a-zA-Z])", ver, perl = TRUE) | 
+      grepl("v2(?!\\d[a-zA-Z])", ver, perl = TRUE) | 
+      grepl("v3", ver) | 
+      grepl("v5", ver) | 
+      grepl("v9", ver) | 
+      grepl("v10", ver)){
+    p.trace.S1 <- mcmc_trace(jm$samples, paste0("S1[", par.idx, "]"))
+    p.trace.S2 <- mcmc_trace(jm$samples, paste0("S2[", par.idx, "]"))
+    high.Rhat.S1 <- high.Rhat(new.Rhat[grep("S1\\[", names(new.Rhat))],
+                              start.year = start.year)
+    high.Rhat.S2 <- high.Rhat(new.Rhat[grep("S2\\[", names(new.Rhat))],
+                              start.year = start.year)
+    
+    out.list <- list(trace.plot.S1 = p.trace.S1,
+                     trace.plot.S2 = p.trace.S2,
+                     high.Rhat.S1 = high.Rhat.S1,
+                     high.Rhat.S2 = high.Rhat.S2)
+    
+  } else if (grepl("v11", ver) | 
+             grepl("v12", ver) | 
+             grepl("v13", ver) | 
+             grepl("v14", ver) | 
+             grepl("v15", ver) | 
+             grepl("v16", ver)){
+    p.trace.S1.S2 <- mcmc_trace(jm$samples, c("S1", "S2"))
+    high.Rhat.S1 <- high.Rhat(new.Rhat[grep("S1", names(new.Rhat))],
+                              start.year = start.year)
+    high.Rhat.S2 <- high.Rhat(new.Rhat[grep("S2", names(new.Rhat))],
+                              start.year = start.year)
+    out.list <- list(trace.plot = p.trace.S1.S2,
+                     high.Rhat.S1 = high.Rhat.S1,
+                     high.Rhat.S2 = high.Rhat.S2)
+    
+  } else if (grepl("v17", ver) |
+             grepl("v19", ver) |
+             grepl("v21", ver) |
+             grepl("v23", ver) |
+             grepl("v25", ver) |
+             grepl("v27", ver)){
+    p.trace.S1 <- mcmc_trace(jm.out$jm$samples, paste0("S1[", par.idx, "]"))
+    p.trace.S2 <- mcmc_trace(jm.out$jm$samples, c("S2"))
+    high.Rhat.S1 <- high.Rhat(new.Rhat[grep("S1\\[", names(new.Rhat))],
+                              start.year = start.year)
+    high.Rhat.S2 <- high.Rhat(new.Rhat[grep("S2", names(new.Rhat))],
+                              start.year = start.year)
+    out.list <- list(trace.plot.S1 = p.trace.S1,
+                     trace.plot.S2 = p.trace.S2,
+                     high.Rhat.S1 = high.Rhat.S1,
+                     high.Rhat.S2 = high.Rhat.S2)
+    
+  } else if (grepl("v18", ver) |
+             grepl("v20", ver) |
+             grepl("v22", ver) |
+             grepl("v24", ver) |
+             grepl("v26", ver) |
+             grepl("v28", ver)){
+    p.trace.S2 <- mcmc_trace(jm.out$jm$samples, paste0("S2[", par.idx, "]"))
+    p.trace.S1 <- mcmc_trace(jm.out$jm$samples, c("S1"))
+    high.Rhat.S1 <- high.Rhat(new.Rhat[grep("S1", names(new.Rhat))],
+                              start.year = start.year)
+    high.Rhat.S2 <- high.Rhat(new.Rhat[grep("S2\\[", names(new.Rhat))],
+                              start.year = start.year)
+    out.list <- list(trace.plot.S1 = p.trace.S1,
+                     trace.plot.S2 = p.trace.S2,
+                     high.Rhat.S1 = high.Rhat.S1,
+                     high.Rhat.S2 = high.Rhat.S2)
+  }
+}
+
+
+P.trace.plots <- function(ver, jm, jags.data, new.Rhat, start.year){
+  par.idx = c(1:jags.data$n.year)
+  
+  # P1 and P2 trace plots
+  if (grepl("v1(?!\\d[a-zA-Z])", ver, perl = TRUE) | 
+      grepl("v2(?!\\d[a-zA-Z])", ver, perl = TRUE) | 
+      grepl("v10", ver) | 
+      grepl("v11", ver) | 
+      grepl("v13", ver) | 
+      grepl("v15", ver) | 
+      grepl("v17", ver) | 
+      grepl("v18", ver) | 
+      grepl("v21", ver)| 
+      grepl("v22", ver)| 
+      grepl("v25", ver)| 
+      grepl("v26", ver)){
+    p.trace.P1 <- mcmc_trace(jm$samples, paste0("P1[", par.idx, "]"))
+    p.trace.P2 <- mcmc_trace(jm$samples, paste0("P2[", par.idx, "]"))
+    high.Rhat.P1 <- high.Rhat(new.Rhat[grep("P1", names(new.Rhat))],
+                              start.year = start.year)
+    high.Rhat.P2 <- high.Rhat(new.Rhat[grep("P2", names(new.Rhat))],
+                              start.year = start.year)
+    
+    out.list <- list(high.Rhat.P1 = high.Rhat.P1,
+                     high.Rhat.P2 = high.Rhat.P2,
+                     trace.plot.P1 = p.trace.P1,
+                     trace.plot.P2 = p.trace.P2)
+    
+  }
+  
+  # P trace plots
+  if (grepl("v3", ver) | 
+      grepl("v5", ver) | 
+      grepl("v9", ver) | 
+      grepl("v12", ver)| 
+      grepl("v14", ver)| 
+      grepl("v16", ver)| 
+      grepl("v19", ver)| 
+      grepl("v20", ver)| 
+      grepl("v16", ver)| 
+      grepl("v23", ver)| 
+      grepl("v24", ver)| 
+      grepl("v27", ver)| 
+      grepl("v28", ver)){
+    p.trace.P <- mcmc_trace(jm$samples, paste0("P[", par.idx, "]"))
+    high.Rhat.P <- high.Rhat(new.Rhat[grep("P", names(new.Rhat))],
+                             start.year = start.year)
+    
+    out.list <- list(high.Rhat = high.Rhat.P,
+                     trace.plot = p.trace.P)
+    
+  }
+  
+}
+
+K.trace.plots <- function(ver, jm, jags.data, new.Rhat, start.year){
+  # v4 has one P and one K. S1 is always year specific
+  par.idx <- c(1:jags.data$n.year)
+  
+  # K trace plots
+  if (grepl("v2(?!\\d[a-zA-Z])", ver, perl = TRUE) | 
+      grepl("v5", ver) | 
+      grepl("v15", ver) | 
+      grepl("v16", ver) |
+      grepl("v17", ver) |
+      grepl("v18", ver) |
+      grepl("v19", ver) |
+      grepl("v20", ver)){
+    p.trace.K <- mcmc_trace(jm$samples, c("K"))
+    high.Rhat.K <- high.Rhat(new.Rhat[grep("K", names(new.Rhat))],
+                             start.year = start.year)  
+    out.list <- list(trace.plot = p.trace.K,
+                     high.Rhat = high.Rhat.K)
+  } else if (grepl("v1(?!\\d[a-zA-Z])", ver, perl = TRUE) | 
+             grepl("v3", ver) | 
+             grepl("v12", ver) | 
+             grepl("v13", ver) | 
+             grepl("v21", ver) | 
+             grepl("v22", ver) | 
+             grepl("v23", ver) | 
+             grepl("v24", ver)){
+    p.trace.K <- mcmc_trace(jm$samples, paste0("K[", par.idx, "]"))
+    high.Rhat.K <- high.Rhat(new.Rhat[grep("K", names(new.Rhat))],
+                             start.year = start.year)  
+    out.list <- list(trace.plot = p.trace.K,
+                     high.Rhat = high.Rhat.K)
+  } else if (grepl("v9", ver) |
+             grepl("v10", ver) |
+             grepl("v11", ver) |
+             grepl("v14", ver) |
+             grepl("v25", ver) |
+             grepl("v26", ver) |
+             grepl("v27", ver) |
+             grepl("v28", ver)){
+    p.trace.K1 <- mcmc_trace(jm.out$jm$samples, paste0("K1[", par.idx, "]"))
+    p.trace.K2 <- mcmc_trace(jm.out$jm$samples, paste0("K2[", par.idx, "]"))
+    high.Rhat.K1 <- high.Rhat(new.Rhat[grep("K1", names(new.Rhat))],
+                              start.year = start.year)  
+    high.Rhat.K2 <- high.Rhat(new.Rhat[grep("K2", names(new.Rhat))],
+                              start.year = start.year)    
+    out.list <- list(trace.plot.1 = p.trace.K1,
+                     trace.plot.2 = p.trace.K2,
+                     high.Rhat.1 = high.Rhat.K1,
+                     high.Rhat.2 = high.Rhat.K2)
+  }
+  
+  return(out.list)
+  
+}
+
 # Check convergence
 # This is for the rank-normalized R-hat (Vehtari et al. 2021)
-high.Rhat <- function(x){
+high.Rhat <- function(x, start.year){
   return(data.frame(idx = which(x > 1.01),
-                    start.year = all.start.year[which(x > 1.01)],
+                    start.year = start.year[which(x > 1.01)],
                     Rhat = x[which(x > 1.01)]))
 }
 
@@ -32,7 +216,9 @@ rank.normalized.R.hat <- function(samples, params, MCMC.params){
 
   subset.mcmc.array <- as_draws_array(subset.mcmc.samples, .nchains = MCMC.params$n.chains)
 
-  rhat.values <- apply(subset.mcmc.array, MARGIN = 3, FUN = rhat)
+  rhat.values <- apply(subset.mcmc.array, 
+                       MARGIN = 3, 
+                       FUN = posterior::rhat)
   
   return(rhat.values)
 }
@@ -372,14 +558,20 @@ Jags_Richards_Since2010_fcn <- function(min.dur, max.day = 90, ver, years, data.
 #                     jags.params = jags.params, 
 #                     MCMC.params = MCMC.params,
 #                     max.day = 100,
-#                     obs.n.min = 10)     
+#                     obs.n.min = 10,
+#                     N.obs = 10)     
 #                     
-NoBUGS_Richards_fcn <- function(min.dur, ver, years, data.dir, jags.params, MCMC.params, max.day = 100, obs.n.min = 10, Run.date = Sys.Date()){
-  print("Starting NoBUGS_Richards_fcn")
+NoBUGS_Richards_fcn <- function(min.dur, ver, years, data.dir, jags.params, MCMC.params, max.day = 100, obs.n.min = 10, N.obs = 10,Run.date = Sys.Date(), model.name.root){
   
+  # N.obs is the number of "top" observers who sighted the most whales among
+  # all observers. 
   #Run.date <- Sys.Date()
-  model.name <- paste0("Richards_Nmixture_", ver) 
+  model.name <- paste0(model.name.root, ver) 
+  print(paste0("Starting NoBUGS_Richards_fcn at ", Sys.time(), " for Model: ", model.name))
+  
   jags.model <- paste0("models/model_", model.name, ".txt")
+  
+  
   
   out.file.name <- paste0("RData/JAGS_", model.name, 
                           "_1968to", max(years), 
@@ -423,9 +615,54 @@ NoBUGS_Richards_fcn <- function(min.dur, ver, years, data.dir, jags.params, MCMC
     jags.data$obs <- obs
     jags.data$n.obs <- max(obs) - 1
     
+    # Create a fixed observer effect input
+    obs_counts <- table(obs.vec)
+    top_obs_names.df <- data.frame(old.ID = names(sort(obs_counts, 
+                                                       decreasing = TRUE))[1:N.obs],
+                                   new.ID = c(1:N.obs))
+                                   
+    # Initialize the array with NAs or 0
+    # Dimensions: Max Days, Max Stations, Total Years
+    n_days_max <- dim(obs)[1] # or however you defined 'd'
+    n_stations_max <- dim(obs)[2]
+    n_years <- dim(obs)[3]
+    
+    obs_array <- array((N.obs+1), 
+                       dim = c(n_days_max, 
+                               n_stations_max, 
+                               n_years))
+    
+    # Fill the array
+    # Assuming your dataframe 'data' has columns: year_index, station_index, day_index _ this doesn't work
+    #START HERE 2026-02-08!!
+    for (i in 1:nrow(top_obs_names.df)){
+      obs_array[obs == top_obs_names.df[i,"old.ID"]] <- top_obs_names.df[i, "new.ID"]
+    }
+      
+    jags.data$obs.fixed <- obs_array
+    jags.data$n.obs.fixed <- (max(top_obs_names.df$new.ID)) + 1
+    
     #jags.data$scaled.day <- jags.data$day-(max.day/2)
     #jags.data["N"] <- NULL
     ###  ###  ###
+    
+    # center and scale VS and BF
+    vs.std <- jags.data$vs
+    for (k in 1:dim(vs.std)[3]){
+      vs.std[,1,k] <- (vs.std[,1,k] - mean(vs.std[,1,k], na.rm = T))/sqrt(var(vs.std[,1,k], na.rm = T))
+      vs.std[,2,k] <- (vs.std[,2,k] - mean(vs.std[,2,k], na.rm = T))/sqrt(var(vs.std[,2,k], na.rm = T))
+    }
+    
+    bf.std <- jags.data$bf
+    for (k in 1:dim(bf.std)[3]){
+      bf.std[,1,k] <- (bf.std[,1,k] - mean(bf.std[,1,k], na.rm = T))/sqrt(var(bf.std[,1,k], na.rm = T))
+      bf.std[,2,k] <- (bf.std[,2,k] - mean(bf.std[,2,k], na.rm = T))/sqrt(var(bf.std[,2,k], na.rm = T))
+    }
+    
+    jags.data$bf.1 <- jags.data$bf
+    jags.data$bf <- bf.std
+    jags.data$vs.1 <- jags.data$vs
+    jags.data$vs <- vs.std
     
     jags.input <- list(jags.data = jags.data,
                        min.dur = min.dur, 
@@ -449,12 +686,17 @@ NoBUGS_Richards_fcn <- function(min.dur, ver, years, data.dir, jags.params, MCMC
                        parallel=T)
     
     Run_Time <- Sys.time() - Start_Time
+    
+    post <- posterior::as_draws(jm$samples)
+    summary.posterior <- posterior::summarise_draws(post)
+    
     jm.out <- list(jm = jm,
                    jags.input = jags.input,
                    #start.year = all.start.year,
                    jags.params = jags.params,
                    jags.model = jags.model,
                    MCMC.params = MCMC.params,
+                   posterior.summary = summary.posterior,
                    Run_Time = Run_Time,
                    Run_Date = Run.date,
                    out.file.name = out.file.name,
@@ -470,6 +712,8 @@ NoBUGS_Richards_fcn <- function(min.dur, ver, years, data.dir, jags.params, MCMC
     jm.out$new.run <- FALSE
   }
   
+  print(paste0("Finishing NoBUGS_Richards_fcn at ", Sys.time(), 
+               " for Model: ", model.name))
   return(jm.out)
   
 }
@@ -1212,8 +1456,10 @@ data2WinBUGS_input <- function(data.dir, years, min.dur){
     obs.year <- data.frame(obs = Final_Data_k$obs) %>% 
       left_join(obs.list, by = "obs")
     
-    n.rows <- c(dim(Final_Data_k %>% filter(f_station == levels(Final_Data_k$f_station)[1]))[1],
-                 dim(Final_Data_k %>% filter(f_station == levels(Final_Data_k$f_station)[2]))[1])
+    n.rows <- c(dim(Final_Data_k %>% 
+                      filter(f_station == levels(Final_Data_k$f_station)[1]))[1],
+                 dim(Final_Data_k %>% 
+                       filter(f_station == levels(Final_Data_k$f_station)[2]))[1])
     
     n.k <- u.k <- obs.k <- array(data = 0, dim = c(max(n.rows), 2, 1))
     obs.k <- array(data = 36, dim = c(max(n.rows), 2, 1))
@@ -1471,267 +1717,422 @@ data2WinBUGS_input <- function(data.dir, years, min.dur){
 # min.dur is the minimum effort duration in minutes to be included in the analysis
 LaakeData2JagsInput <- function(min.dur, max.day = 100){
   
-  library(tidyverse)
-  
-  # From example code in the ERAnalysis library
-  # 
-  # The recent survey data 1987 and after are stored in ERSurveyData and those data
-  # are processed by the ERAbund program to produce files of sightings and effort.
-  # The sightings files are split into Primary observer and Secondary observer sightings.
-  # Primary observer sightings are whales that are not travelling North and are defined by
-  # those when EXPERIMENT==1 (single observer) or a designated LOCATION when EXPERIMENT==2.
-  #  For surveys 2000/2001 and 2001/2002, the primary observer was at LOCATION=="N"
-  # and for all other years, LOCATION=="S".
-  #
-  # Based on the projected timing of the passage of the whale (t241) perpendicular to the 
-  # watch station, the sighting was either contained in the watch (on effort) or not (off effort).
-  # The dataframe Primary contains all of the on effort sightings and PrimaryOff contains all
-  # of the off-effort sightings.  
-  #
-  #data(PrimaryOff)   # off-effort sightings
-  load("Data/Primary.rda")      # on-effort sightings
-  load("Data/ERSurveyData.rda")
-  load("Data/Observer.rda")
-  
-  # The data in PrimarySightings are all southbound sightings for all years in which visibility and beaufort
-  # are less than or equal to 4. Below the counts are shown for the 2 dataframes for
-  # recent surveys since 1987/88.
-  #table(Primary$Start.year[Primary$vis<=4 & Primary$beaufort<=4])
-  #load("Data/PrimarySightings.rda")
-  load("Data/PrimaryEffort.rda")
-  load("Data/SecondaryEffort.rda")
-  
-  # Likewise, the secondary sightings are those with EXPERIMENT==2 but the LOCATION that
-  # is not designated as primary.  there is no effort data for the secondary sightings... 
-  # so, can't use it for BUGS/jags - ignore it for now.
-  # data(SecondarySightings)
-  
-  # Effort and sightings prior to 1987 were filtered for an entire watch if vis or beaufort 
-  # exceeded 4 at any time during the watch.  This is done for surveys starting in 1987 with the
-  # Use variable which is set to FALSE for all effort records in a watch if at any time the vis or
-  # beaufort exceeded 4 during the watch.
-  # 
-  # Here are the hours of effort that are excluded (FALSE) and included (TRUE) by each year
-  # Note that for most years <1987 there are no records with Use==FALSE because the filtered records
-  # were excluded at the time the dataframe was constructed. The only exception is for 1978 in which  
-  # one watch (5 hours) was missing a beaufort value so it was excluded.
-  # tapply(PrimaryEffort$effort,
-  #        list(PrimaryEffort$Use,
-  #             PrimaryEffort$Start.year),
-  #        sum)*24
-  #        
-  
-  # Filter effort and sightings and store in dataframes Effort and Sightings
-  Laake_PrimaryEffort <- PrimaryEffort[PrimaryEffort$Use,]  
-  
-  Laake_SecondaryEffort <- SecondaryEffort[SecondaryEffort$Use,]
-  
-  # Define shifts and combine effort within each shift:
-  # Define shifts, group by date and shift, calculate cumulative effort, then
-  # find the maximum cumulative effort for each sfhit. 
-  Laake_PrimaryEffort %>%
-    mutate(Shift = shift.definition(fractional_Day2YMDhms(begin, year(Date))$YMD,
-                                    fractional_Day2YMDhms(begin, year(Date))$hms)) %>%
-    group_by(Date, Shift) %>% 
-    mutate(cumu.effort = cumsum(effort),
-           effort.per.shift = max(cumu.effort)) -> Laake_PrimaryEffort
-  
-  Laake_SecondaryEffort %>%
-    mutate(Shift = shift.definition(fractional_Day2YMDhms(begin, year(Date))$YMD,
-                                    fractional_Day2YMDhms(begin, year(Date))$hms)) %>%
-    group_by(Date, Shift) %>% 
-    mutate(cumu.effort = cumsum(effort),
-           effort.per.shift = max(cumu.effort)) -> Laake_SecondaryEffort
-  
-  # Filter to minimum duration. min.dur is given in the unit of minuites, which
-  # is converted to the unit of days:
-  Laake_PrimaryEffort %>%
-    filter(effort.per.shift >= min.dur / (60 * 24) ) -> Laake_PrimaryEffort
-  
-  Laake_SecondaryEffort %>%
-    filter(effort.per.shift >= min.dur / (60 * 24) ) -> Laake_SecondaryEffort
-  
-  # Sightings = PrimarySightings
-  # Sightings$seq = 1:nrow(Sightings)
-  # Sightings = merge(Sightings, subset(Laake_PrimaryEffort, select=c("key")))
-  # Sightings = Sightings[order(Sightings$seq),]
-  
-  # filter off-effort sightings and high Beaufort/vis lines from secondary sightings
-  # but... there is no effort data for the secondary sightings... so, can't use it
-  # for BUGS/jags - ignore it for now.
-  # SecondarySightings %>% 
-  #   filter(vis < 5, beaufort < 5, is.na(off)) -> secondary.sightings
-  
-  # For jags and WinBugs code, what I need are
-  # 1. observed number of whales per day n[d, s, y], where d = # days since 12/1,
-  # s = station (1 = primary, 2 = secondary), y = year. For Laake's data, maximum 
-  # number of days per year was 94. 
-  # 2. Beaufort sea state bf[d,y]
-  # 3. Visibility code vs[d,y]
-  # 4. observer code obs[d,s,y]
-  # 5. the proportion of watch duration per day (fractional day, NOT hours per 
-  # maximum observation period) watch.prop[d,y]
-  # 6. index of survey day, i.e., the number of days since 12/1 day[d,y]
-  
-  # Need to count the number of days since 12-01 for each year. But 12-01 is 1.
-  # Then... 
-  # Count the number of whales per day and daily effort
-  # In early years, surveys were conducted 10 hrs. So, the watch proportion
-  # can be > 1.0, because we have used 9 hrs as maximum. 
-  
-  # Summarizing by day worked fine but the model requires counts per observation
-  # period. Needs to be redone. 2023-09-15 DONE.
-  
-  Laake_PrimaryEffort %>% 
-    mutate(Day1 = as.Date(paste0(Start.year, "-12-01")),
-           dt = as.numeric(as.Date(Date) - Day1) + 1,
-           obs = Observer) %>%
-    select(Start.year, nwhales, effort, vis, beaufort, obs, dt, Date, Shift, effort.per.shift) %>%
-    group_by(Start.year) %>%
-    mutate(effort.hr = effort.per.shift * 24,  # effort in hours
-           watch.prop = effort.hr/9) -> Effort.by.period
-  
-  # observers - rather than using entries of Observer.rda, I pull out all observers
-  # from the effort objects (primary and secondary) and re-number them. 
-  obs <- c(unique(Laake_PrimaryEffort$Observer),
-           unique(Laake_SecondaryEffort$Observer)) %>% unique()
-  
-  Laake.obs <- data.frame(obs = c(as.vector(obs), "No obs"),
-                          ID.new = seq(1:(length(obs) + 1)))
-  
-  no.obs.ID <- max(Laake.obs$ID.new)
-  
-  # effort is in the unit of days. It is "effort" and not "effort.per.shift"
-  # because a "period" is defined with Beaufort/Vis code and the "effort" goes
-  # with the pair. "effort.per.shift" was used to extract long enough "shift"
-  # for including all observations. 
-  Laake_PrimaryEffort %>% 
-    group_by(Start.year) %>%
-    reframe(Date = Date,
-            Year = first(Start.year),
-            n = nwhales,
-            Day = as.Date(Date) - as.Date(paste0(Year, "-12-01")) + 1,
-            Season = paste0(Year, "/", Year + 1),
-            obs = Observer,
-            vs = vis,
-            bf = beaufort,
-            watch.length = effort,
-            watch.prop = (effort * 24)/9) -> Laake.primary.counts
-  
-  Laake_SecondaryEffort %>% 
-    group_by(Start.year) %>%
-    reframe(Date = Date,
-            Year = first(Start.year),
-            n = nwhales,
-            Day = as.Date(Date) - as.Date(paste0(Year, "-12-01")) + 1,
-            Season = paste0(Year, "/", Year + 1),
-            obs = Observer,
-            vs = vis,
-            bf = beaufort,
-            watch.length = effort,
-            watch.prop = (effort * 24)/9) -> Laake.secondary.counts
-  
-  # Laake.primary.counts %>% 
-  #   group_by(Date) %>%
-  #   reframe(Year = first(Start.year),
-  #           Date = Date,
-  #           Day = as.Date(Date) - as.Date(paste0(Year, "-12-01")) + 1,
-  #           Season = paste0(Year, "/", Year + 1),
-  #           Daily.n = sum(n)) -> Laake.primary.daily.counts
-  
-  # Find double observer years
-  double.obs.year <- unique(Laake_SecondaryEffort$Start.year) 
-  all.year <- unique(Laake_PrimaryEffort$Start.year)
-  
-  n.station <- rep(1, length(all.year))
-  n.station[all.year %in% double.obs.year] <- 2
-  
-  Laake.primary.counts %>%
-    group_by(Start.year) %>%
-    summarize(Season = first(Season),
-              periods = first(n())) -> Laake.primary.periods
-  
-  Laake.secondary.counts %>%
-    group_by(Start.year) %>%
-    summarize(Season = first(Season),
-              periods = first(n())) -> Laake.secondary.periods
-  
-  Laake.primary.periods %>% 
-    left_join(Laake.secondary.periods, by = "Season") %>%
-    select(Start.year.x, Season, periods.x, periods.y) %>%
-    transmute(Start.year = Start.year.x,
-              Season = Season,
-              periods.1 = periods.x,
-              periods.2 = periods.y) -> Laake.periods
-  
-  bf <- vs <- watch.prop <-  watch.length <- array(dim = c(max(Laake.primary.periods$periods),
-                                                                         2, length(all.year)))
-  obs.input <- n.Laake <- day <- array(dim = c(max(Laake.primary.periods$periods) + 2,
-                                               2, length(all.year)))
-  y <- 1
-  y2 <- 1
-  for (y in 1:length(all.year)){
-    temp.data <- Laake.primary.counts %>%
-      filter(Start.year == all.year[y]) %>%
-      arrange(Day) %>%
-      left_join(Laake.obs, by = "obs")
+  if (!file.exists("RData/Jags_Richards_LaakeData.rds")){
     
-    n.Laake[1:(Laake.primary.periods$periods[y]+2), 1, y] <- c(0, temp.data$n, 0)
-    obs.input[1:(Laake.primary.periods$periods[y]+2), 1, y] <- c(no.obs.ID, temp.data$ID.new, no.obs.ID)
-    watch.prop[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$watch.prop
-    watch.length[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$watch.length
-    bf[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$bf #scale(temp.data$bf)
-    vs[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$vs #scale(temp.data$vs)
-    day[1:(Laake.primary.periods$periods[y]+2), 1, y] <- c(1, as.numeric(temp.data$Day), max.day)
+    library(tidyverse)
     
-    # fill in the secondary observations
-    if (isTRUE(all.year[y] %in% double.obs.year)){
-      temp.data <- Laake.secondary.counts %>%
-        filter(Start.year == all.year[y])%>%
-        left_join(Laake.obs, by = "obs")
+    # From example code in the ERAnalysis library
+    # 
+    # The recent survey data 1987 and after are stored in ERSurveyData and those data
+    # are processed by the ERAbund program to produce files of sightings and effort.
+    # The sightings files are split into Primary observer and Secondary observer sightings.
+    # Primary observer sightings are whales that are not travelling North and are defined by
+    # those when EXPERIMENT==1 (single observer) or a designated LOCATION when EXPERIMENT==2.
+    #  For surveys 2000/2001 and 2001/2002, the primary observer was at LOCATION=="N"
+    # and for all other years, LOCATION=="S".
+    #
+    # Based on the projected timing of the passage of the whale (t241) perpendicular to the 
+    # watch station, the sighting was either contained in the watch (on effort) or not (off effort).
+    # The dataframe Primary contains all of the on effort sightings and PrimaryOff contains all
+    # of the off-effort sightings.  
+    #
+    #data(PrimaryOff)   # off-effort sightings
+    load("Data/Primary.rda")      # on-effort sightings from 1987 to 2007
+    load("Data/ERSurveyData.rda")
+    load("Data/Observer.rda")
+    
+    # The data in PrimarySightings are all southbound sightings for all years in which visibility and beaufort
+    # are less than or equal to 4. Below the counts are shown for the 2 dataframes for
+    # recent surveys since 1987/88.
+    #table(Primary$Start.year[Primary$vis<=4 & Primary$beaufort<=4])
+    #load("Data/PrimarySightings.rda")
+    load("Data/PrimaryEffort.rda")
+    load("Data/SecondaryEffort.rda")
+    
+    # Likewise, the secondary sightings are those with EXPERIMENT==2 but the LOCATION that
+    # is not designated as primary.  there is no effort data for the secondary sightings... 
+    # so, can't use it for BUGS/jags - ignore it for now.
+    # data(SecondarySightings)
+    
+    # Effort and sightings prior to 1987 were filtered for an entire watch if vis or beaufort 
+    # exceeded 4 at any time during the watch.  This is done for surveys starting in 1987 with the
+    # Use variable which is set to FALSE for all effort records in a watch if at any time the vis or
+    # beaufort exceeded 4 during the watch.
+    # 
+    # Here are the hours of effort that are excluded (FALSE) and included (TRUE) by each year
+    # Note that for most years <1987 there are no records with Use==FALSE because the filtered records
+    # were excluded at the time the dataframe was constructed. The only exception is for 1978 in which  
+    # one watch (5 hours) was missing a beaufort value so it was excluded.
+    # tapply(PrimaryEffort$effort,
+    #        list(PrimaryEffort$Use,
+    #             PrimaryEffort$Start.year),
+    #        sum)*24
+    #        
+    
+    # Filter effort and sightings and store in dataframes Effort and Sightings
+    Laake_PrimaryEffort <- PrimaryEffort[PrimaryEffort$Use,]  
+    
+    Laake_SecondaryEffort <- SecondaryEffort[SecondaryEffort$Use,]
+    
+    # Define shifts and combine effort within each shift:
+    # Define shifts, group by date and shift, calculate cumulative effort, then
+    # find the maximum cumulative effort for each shfit.
+    #Primary.new.date <- fractional_Day2YMDhms(Laake_PrimaryEffort$end,
+    #                                  Laake_PrimaryEffort$Start.year + 1)
+    
+    Laake_PrimaryEffort %>%
+      mutate(Shift = shift.definition(fractional_Day2YMDhms(begin, 
+                                                            Start.year + 1)$YMD,
+                                      fractional_Day2YMDhms(begin, 
+                                                            Start.year + 1)$hms)) %>%
+      group_by(Date, Shift) %>% 
+      mutate(cumu.effort = cumsum(effort),
+             effort.per.shift = max(cumu.effort)) -> Laake_PrimaryEffort.all
+    
+    Laake_SecondaryEffort %>%
+      mutate(Shift = shift.definition(fractional_Day2YMDhms(begin, 
+                                                            Start.year + 1)$YMD,
+                                      fractional_Day2YMDhms(begin, 
+                                                            Start.year + 1)$hms)) %>%
+      group_by(Date, Shift) %>% 
+      mutate(cumu.effort = cumsum(effort),
+             effort.per.shift = max(cumu.effort)) -> Laake_SecondaryEffort.all
+    
+    # Filter to minimum duration. min.dur is given in the unit of minutes, which
+    # is converted to the unit of days:
+    
+    Laake_PrimaryEffort.all %>%
+      filter(effort.per.shift >= min.dur / (60 * 24) ) -> Laake_PrimaryEffort
+    
+    Laake_SecondaryEffort.all %>%
+      filter(effort.per.shift >= min.dur / (60 * 24) ) -> Laake_SecondaryEffort
+    
+    # Sightings = PrimarySightings
+    # Sightings$seq = 1:nrow(Sightings)
+    # Sightings = merge(Sightings, subset(Laake_PrimaryEffort, select=c("key")))
+    # Sightings = Sightings[order(Sightings$seq),]
+    
+    # filter off-effort sightings and high Beaufort/vis lines from secondary sightings
+    # but... there is no effort data for the secondary sightings... so, can't use it
+    # for BUGS/jags - ignore it for now.
+    # SecondarySightings %>% 
+    #   filter(vis < 5, beaufort < 5, is.na(off)) -> secondary.sightings
+    
+    # For jags and WinBugs code, what I need are
+    # 1. observed number of whales per day n[d, s, y], where d = # days since 12/1,
+    # s = station (1 = primary, 2 = secondary), y = year. For Laake's data, maximum 
+    # number of days per year was 94. 
+    # 2. Beaufort sea state bf[d,y]
+    # 3. Visibility code vs[d,y]
+    # 4. observer code obs[d,s,y]
+    # 5. the proportion of watch duration per day (fractional day, NOT hours per 
+    # maximum observation period) watch.prop[d,y]
+    # 6. index of survey day, i.e., the number of days since 12/1 day[d,y]
+    
+    # Need to count the number of days since 12-01 for each year. But 12-01 is 1.
+    # Then... 
+    # Count the number of whales per day and daily effort
+    # In early years, surveys were conducted 10 hrs. So, the watch proportion
+    # can be > 1.0, because we have used 9 hrs as maximum. 
+    
+    # Summarizing by day worked fine but the model requires counts per observation
+    # period. Needs to be redone. 2023-09-15 DONE.
+    
+    Laake_PrimaryEffort %>% 
+      mutate(Day1 = as.Date(paste0(Start.year, "-12-01")),
+             dt = as.numeric(as.Date(Date) - Day1) + 1,
+             obs = Observer) %>%
+      select(Start.year, nwhales, effort, vis, 
+             beaufort, obs, dt, Date, Shift, effort.per.shift) %>%
+      group_by(Start.year) %>%
+      mutate(shift.hr = effort.per.shift * 24,  # effort in hours
+             shift.prop = shift.hr/9) -> Effort.by.period
+    
+    # observers - rather than using entries of Observer.rda, I pull out all observers
+    # from the effort objects (primary and secondary) and re-number them. 
+    obs <- c(unique(Laake_PrimaryEffort$Observer),
+             unique(Laake_SecondaryEffort$Observer)) %>% unique()
+    
+    Laake.obs <- data.frame(obs = c(as.vector(obs), "No obs"),
+                            ID.new = seq(1:(length(obs) + 1)))
+    
+    no.obs.ID <- max(Laake.obs$ID.new)
+    
+    # effort is in the unit of days. It is "effort" and not "effort.per.shift"
+    # because a "period" is defined with Beaufort/Vis code and the "effort" goes
+    # with the pair. "effort.per.shift" was used to extract long enough "shift"
+    # for including all observations. 
+    # For each season, day, and shift, the sightings need to be pooled
+    # for the same condition, in order to make Laake's dataset comparable
+    # to mine. Currently, each sighting is listed as one "row." This 
+    # inflates the number of sightings under the same condition and 
+    # observer. This has been fixed in the following. 2026-02-11 
+    
+    new.primary <- list()
+    Laake_PrimaryEffort %>%
+      count(Start.year, Date, Shift, vis, beaufort) -> Laake.unique.combos 
+    k<- 3285
+    for (k in 1:nrow(Laake.unique.combos)){
+      Laake_PrimaryEffort %>%
+        filter(Start.year == Laake.unique.combos$Start.year[k],
+               Date == Laake.unique.combos$Date[k],
+               Shift == Laake.unique.combos$Shift[k],
+               vis == Laake.unique.combos$vis[k],
+               beaufort == Laake.unique.combos$beaufort[k]) -> tmp
       
-      n.Laake[1:(Laake.secondary.periods$periods[y2]+2), 2, y] <- c(0,temp.data$n,0)
-      obs.input[1:(Laake.secondary.periods$periods[y2]+2), 2, y] <- c(no.obs.ID, temp.data$ID.new, no.obs.ID)
-      watch.prop[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$watch.prop
-      watch.length[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$watch.length
-      bf[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$bf #scale(temp.data$bf)
-      vs[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$vs #scale(temp.data$vs)
-      day[1:(Laake.secondary.periods$periods[y2]+2), 2, y] <- c(1, as.numeric(temp.data$Day), max.day)
+      if (Laake.unique.combos$n[k] == 1){
+        tmp %>%
+          select(Date, Start.year, nwhales, Observer, vis,
+                 beaufort, effort.per.shift, Shift,
+                 effort, begin, end, npods) %>%
+          #group_by(Start.year) %>%
+          mutate(Day = as.Date(Date)-as.Date(paste0(Start.year, "-12-01"))+1,
+                 Season = paste0(Start.year, "/", Start.year+1),
+                 shift.prop = (effort.per.shift*24)/9) %>%
+          rename(Year = Start.year,
+                 n = nwhales,
+                 obs = Observer,
+                 vs = vis,
+                 bf = beaufort,
+                 shift.length = effort.per.shift,
+                 watch.length = effort) %>%
+          select(Date, Year, n, Day, Season, obs, vs, bf,
+                 shift.length, watch.length, shift.prop, begin,
+                 end, npods, Shift) -> new.primary[[k]] 
+      } else {
+        tmp %>%
+          select(Date, Start.year, nwhales, Observer, vis,
+                 beaufort, effort.per.shift, Shift,
+                 effort, begin, end, npods) %>%
+          #group_by(Start.year)%>%
+          summarize(Date = first(Date),
+                    Year = first(Start.year),
+                    n = sum(nwhales),
+                    Day = as.Date(Date)-as.Date(paste0(Year, "-12-01"))+1,
+                    Season = paste0(Year, "/", Year+1),
+                    obs = first(Observer),
+                    vs = first(vis),
+                    bf = first(beaufort),
+                    shift.length = first(effort.per.shift),
+                    watch.length = sum(effort),
+                    shift.prop = (first(effort.per.shift) * 24)/9,
+                    begin = first(begin),
+                    end = last(end),
+                    npods = sum(npods),
+                    Shift = first(Shift),
+                    .groups = "drop") -> new.primary[[k]]
+      }
+    }  
+    
+    Laake.primary.counts <- do.call("rbind", new.primary)
+    
+    # Laake_PrimaryEffort %>% 
+    #   group_by(Start.year) %>%
+    #   reframe(Date = Date,
+    #           Year = first(Start.year),
+    #           n = nwhales,
+    #           Day = as.Date(Date) - as.Date(paste0(Year, "-12-01")) + 1,
+    #           Season = paste0(Year, "/", Year + 1),
+    #           obs = Observer,
+    #           vs = vis,
+    #           bf = beaufort,
+    #           shift.length = effort.per.shift, # length of each shift
+    #           watch.length = effort, # watch length of each row
+    #           shift.prop = (effort.per.shift * 24)/9) -> Laake.primary.counts
+    
+    new.secondary <- list()
+    Laake_SecondaryEffort %>%
+      count(Start.year, Date, Shift, vis, beaufort) -> Laake.unique.combos 
+    k<- 1
+    for (k in 1:nrow(Laake.unique.combos)){
+      Laake_SecondaryEffort %>%
+        filter(Start.year == Laake.unique.combos$Start.year[k],
+               Date == Laake.unique.combos$Date[k],
+               Shift == Laake.unique.combos$Shift[k],
+               vis == Laake.unique.combos$vis[k],
+               beaufort == Laake.unique.combos$beaufort[k]) -> tmp
       
-      y2 <- y2 + 1
+      if (Laake.unique.combos$n[k] == 1){
+        tmp %>%
+          select(Date, Start.year, nwhales, Observer, vis,
+                 beaufort, effort.per.shift, Shift,
+                 effort, begin, end, npods) %>%
+          #group_by(Start.year) %>%
+          mutate(Day = as.Date(Date)-as.Date(paste0(Start.year, "-12-01"))+1,
+                 Season = paste0(Start.year, "/", Start.year+1),
+                 shift.prop = (effort.per.shift*24)/9) %>%
+          rename(Year = Start.year,
+                 n = nwhales,
+                 obs = Observer,
+                 vs = vis,
+                 bf = beaufort,
+                 shift.length = effort.per.shift,
+                 watch.length = effort) %>%
+          select(Date, Year, n, Day, Season, obs, vs, bf,
+                 shift.length, watch.length, shift.prop, begin,
+                 end, npods, Shift) -> new.secondary[[k]] 
+      } else {
+        tmp %>%
+          select(Date, Start.year, nwhales, Observer, vis,
+                 beaufort, effort.per.shift, Shift,
+                 effort, begin, end, npods) %>%
+          #group_by(Start.year) %>%
+          summarize(Date = first(Date),
+                    Year = first(Start.year),
+                    n = sum(nwhales),
+                    Day = as.Date(Date)-as.Date(paste0(Year, "-12-01"))+1,
+                    Season = paste0(Year, "/", Year+1),
+                    obs = first(Observer),
+                    vs = first(vis),
+                    bf = first(beaufort),
+                    shift.length = first(effort.per.shift),
+                    watch.length = sum(effort),
+                    shift.prop = (first(effort.per.shift) * 24)/9,
+                    begin = first(begin),
+                    end = last(end),
+                    npods = sum(npods),
+                    Shift = first(Shift),
+                    .groups = "drop") -> new.secondary[[k]]
+      }
+    }  
+    
+    Laake.secondary.counts <- do.call("rbind", new.secondary)
+    
+    # Laake_SecondaryEffort %>% 
+    #   group_by(Start.year) %>%
+    #   reframe(Date = Date,
+    #           Year = first(Start.year),
+    #           n = nwhales,
+    #           Day = as.Date(Date) - as.Date(paste0(Year, "-12-01")) + 1,
+    #           Season = paste0(Year, "/", Year + 1),
+    #           obs = Observer,
+    #           vs = vis,
+    #           bf = beaufort,
+    #           shift.length = effort.per.shift, # length of each shift
+    #           watch.length = effort, # watch length of each row
+    #           shift.prop = (effort.per.shift * 24)/9) -> Laake.secondary.counts
+    
+    # Laake.primary.counts %>% 
+    #   group_by(Date) %>%
+    #   reframe(Year = first(Start.year),
+    #           Date = Date,
+    #           Day = as.Date(Date) - as.Date(paste0(Year, "-12-01")) + 1,
+    #           Season = paste0(Year, "/", Year + 1),
+    #           Daily.n = sum(n)) -> Laake.primary.daily.counts
+    
+    # Find double observer years
+    double.obs.year <- unique(Laake_SecondaryEffort$Start.year) 
+    all.year <- unique(Laake_PrimaryEffort$Start.year)
+    
+    n.station <- rep(1, length(all.year))
+    n.station[all.year %in% double.obs.year] <- 2
+    
+    Laake.primary.counts %>%
+      group_by(Year) %>%
+      summarize(Season = first(Season),
+                periods = first(n())) -> Laake.primary.periods
+    
+    Laake.secondary.counts %>%
+      group_by(Year) %>%
+      summarize(Season = first(Season),
+                periods = first(n())) -> Laake.secondary.periods
+    
+    Laake.primary.periods %>% 
+      left_join(Laake.secondary.periods, by = "Season") %>%
+      select(Year.x, Season, periods.x, periods.y) %>%
+      transmute(Start.year = Year.x,
+                Season = Season,
+                periods.1 = periods.x,
+                periods.2 = periods.y) -> Laake.periods
+    
+    bf <- bf.centered <- vs <- vs.centered <- watch.prop <-  watch.length <- shift.prop <- array(dim = c(max(Laake.primary.periods$periods),
+                                                                                                         2, length(all.year)))
+    
+    obs.input <- n.Laake <- day <- array(dim = c(max(Laake.primary.periods$periods) + 2,
+                                                 2, length(all.year)))
+    y <- 1
+    y2 <- 1
+    for (y in 1:length(all.year)){
+      Laake.primary.counts %>%
+        filter(Year == all.year[y]) %>%
+        arrange(Day) %>%
+        left_join(Laake.obs, by = "obs") -> temp.data
       
+      n.Laake[1:(Laake.primary.periods$periods[y]+2), 1, y] <- c(0, temp.data$n, 0)
+      obs.input[1:(Laake.primary.periods$periods[y]+2), 1, y] <- c(no.obs.ID, temp.data$ID.new, no.obs.ID)
+      shift.prop[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$shift.prop
+      watch.length[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$watch.length
+      #shift.length[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$shift.length
+      bf[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$bf 
+      vs[1:Laake.primary.periods$periods[y], 1, y] <- temp.data$vs 
+      bf.centered[1:Laake.primary.periods$periods[y], 1, y] <- scale(temp.data$bf, scale = F)
+      vs.centered[1:Laake.primary.periods$periods[y], 1, y] <- scale(temp.data$vs, scale = F)
+      
+      day[1:(Laake.primary.periods$periods[y]+2), 1, y] <- c(1, as.numeric(temp.data$Day), max.day)
+      
+      # fill in the secondary observations
+      if (isTRUE(all.year[y] %in% double.obs.year)){
+        temp.data <- Laake.secondary.counts %>%
+          filter(Year == all.year[y])%>%
+          left_join(Laake.obs, by = "obs")
+        
+        n.Laake[1:(Laake.secondary.periods$periods[y2]+2), 2, y] <- c(0,temp.data$n,0)
+        obs.input[1:(Laake.secondary.periods$periods[y2]+2), 2, y] <- c(no.obs.ID, temp.data$ID.new, no.obs.ID)
+        shift.prop[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$shift.prop
+        watch.length[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$watch.length
+        #shift.length[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$shift.length
+        bf[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$bf #scale(temp.data$bf)
+        vs[1:Laake.secondary.periods$periods[y2], 2, y] <- temp.data$vs #scale(temp.data$vs)
+        bf.centered[1:Laake.secondary.periods$periods[y2], 2, y] <- scale(temp.data$bf, scale = F)
+        vs.centered[1:Laake.secondary.periods$periods[y2], 2, y] <- scale(temp.data$vs, scale = F)
+        day[1:(Laake.secondary.periods$periods[y2]+2), 2, y] <- c(1, as.numeric(temp.data$Day), max.day)
+        
+        y2 <- y2 + 1
+        
+      }
     }
+    
+    N <- matrix(data = NA, nrow = max.day, ncol = dim(n.Laake)[3])
+    N[1,] <- 0
+    N[max.day,] <- 0
+    
+    jags.data <- list(  n = n.Laake,
+                        n.station = n.station,
+                        n.year = length(all.year),
+                        n.obs = nrow(Laake.obs),
+                        periods = Laake.periods %>% 
+                          select(periods.1, periods.2) %>% simplify2array(),
+                        obs = obs.input,
+                        vs = vs,
+                        bf = bf,
+                        vs.centered = vs.centered,
+                        bf.centered = bf.centered,
+                        watch.prop = watch.prop,
+                        watch.length = watch.length,
+                        day = day,
+                        n.days = max(day, na.rm = T),
+                        N = N)
+    
+    out.list <- list(jags.data = jags.data,
+                     all.start.year = all.year,
+                     double.obs.year = double.obs.year,
+                     obs = Laake.obs,
+                     no.obs.ID = no.obs.ID,
+                     min.dur = min.dur,
+                     primary.counts = Laake.primary.counts,
+                     secondary.counts = Laake.secondary.counts,
+                     seasons = paste0(all.year, "/", all.year + 1),
+                     primary.all = Laake_PrimaryEffort.all,
+                     secondary.all = Laake_SecondaryEffort.all,
+                     primary.filtered = Laake_PrimaryEffort,
+                     secondary.filtered = Laake_SecondaryEffort)
+    
+    saveRDS(out.list,
+            file = "RData/Jags_Richards_LaakeData.rds")
+  } else {
+    
+    out.list <- readRDS("RData/Jags_Richards_LaakeData.rds")
   }
-  
-  N <- matrix(data = NA, nrow = max.day, ncol = dim(n.Laake)[3])
-  N[1,] <- 0
-  N[max.day,] <- 0
-  
-  jags.data <- list(  n = n.Laake,
-                      n.station = n.station,
-                      n.year = length(all.year),
-                      n.obs = nrow(Laake.obs),
-                      periods = Laake.periods %>% 
-                        select(periods.1, periods.2) %>% simplify2array(),
-                      obs = obs.input,
-                      vs = vs,
-                      bf = bf,
-                      watch.prop = watch.prop,
-                      watch.length = watch.length,
-                      day = day,
-                      n.days = max(day, na.rm = T),
-                      N = N)
-  
-  out.list <- list(jags.data = jags.data,
-                   all.start.year = all.year,
-                   double.obs.year = double.obs.year,
-                   obs = Laake.obs,
-                   no.obs.ID = no.obs.ID,
-                   min.dur = min.dur,
-                   primary.counts = Laake.primary.counts,
-                   secondary.counts = Laake.secondary.counts,
-                   seasons = paste0(all.year, "/", all.year + 1))
-  
   return(out.list)  
 }
 
@@ -1859,7 +2260,7 @@ LaakeData2JagsInput <- function(min.dur, max.day = 100){
 data2Jags_input_NoBUGS <- function(min.dur,
                                    years,
                                    data.dir,
-                                   max.day = 90){
+                                   max.day = 100){
   
   seasons <- sapply(years, FUN = function(x) paste0(x-1, "/", x))
   start.years <- years - 1
@@ -2089,6 +2490,28 @@ data2Jags_input_NoBUGS <- function(min.dur,
   N[1,] <- 0
   N[max.day,] <- 0
 
+  # Find the maximum observed number of whales per day
+  max.n.day <- array(data = 0, dim = c(100, length(years)))
+  for (k in 1:length(years)){
+    n.days <- unique(c(day[,1,k], day[,2,k])) %>% na.omit() %>% sort()
+    n.days <- n.days[n.days > 1 & n.days < 100]
+    for (k1 in 1:length(n.days)){
+      n.1 <- n[day[,2,k] == n.days[k1], 1, k]
+      max.1 <- ifelse(sum(!is.na(n.1)) > 0,
+                      max(n.1, na.rm = T),
+                      NA)
+      
+      n.2 <- n[day[,2,k] == n.days[k1], 2, k]
+      max.2 <- ifelse(sum(!is.na(n.2)) > 0,
+                      max(n.2, na.rm = T),
+                      NA)
+      
+      max.n.day[n.days[k1], k] <- max(c(max.1, max.2, na.rm = T))
+      
+    }
+    
+  }
+  
   jags.data <- list(  n = n,
                       n.station = n.stations,
                       n.year = length(years),
@@ -2105,7 +2528,8 @@ data2Jags_input_NoBUGS <- function(min.dur,
                       watch.length = watch.length,
                       watch.prop = (watch.length * 24)/9,
                       day = day,
-                      N = N)
+                      N = N,
+                      max.n.day = max.n.day)
   
   out.list <- list(jags.data = jags.data,
                    original.obs = obs,
@@ -2430,6 +2854,10 @@ AllData2JagsInput_NoBUGS <- function(min.dur, years, data.dir, max.day = 90){
   N <- matrix(data = NA, nrow = max.day, ncol = dim(jags.n.all)[3])
   N[1,] <- 0
   N[max.day,] <- 0
+  
+  log_watch <- log(jags.watch.length.all)
+  mean_log_watch <- mean(log_watch, na.rm = TRUE)
+  
   jags.data <- list(  n = labelled::remove_attributes(jags.n.all, "dimnames"),
                       n.station = c(jags.input.Laake$jags.data$n.station,
                                     jags.input.new$jags.data$n.station),
@@ -2444,6 +2872,7 @@ AllData2JagsInput_NoBUGS <- function(min.dur, years, data.dir, max.day = 90){
                       bf = labelled::remove_attributes(jags.bf.all, "dimnames"),
                       watch.prop = labelled::remove_attributes(jags.watch.prop.all, "dimnames"),
                       watch.length = labelled::remove_attributes(jags.watch.length.all, "dimnames"),
+                      mean.log.watch = mean_log_watch,
                       day = labelled::remove_attributes(jags.day.all, "dimnames"),
                       N = N)
   
@@ -2611,7 +3040,10 @@ plot.trace.dens <- function(jm, var.name){
 
 # Defines shift ID based on date and time. 
 shift.definition <- function(date, time){
-  dur.since.midnight <- difftime(paste(date, time), paste(date, "00:00:00"), units = "hours")
+  dur.since.midnight <- difftime(paste(date, time), 
+                                 paste(date, "00:00:00"), 
+                                 units = "hours")
+  
   shift.id <- ifelse(dur.since.midnight <= 7.5, 0,
                      ifelse(dur.since.midnight <= 9, 1,
                             ifelse(dur.since.midnight <= 10.5, 2,
@@ -3463,6 +3895,9 @@ get.shift <- function(YEAR, data, i){
 }
 
 # converts a fractional date into YMD and hms
+# The second input should be the second year
+# of a season. For example, for the 1978/1979
+# season, it should be 1979. 
 fractional_Day2YMDhms <- function(x, YEAR){
   n.days <- floor(x)
   dec.hr <- (x - n.days) * 24
@@ -3471,7 +3906,6 @@ fractional_Day2YMDhms <- function(x, YEAR){
   m <- floor(dec.min)
   s <- floor((dec.min - m) * 60)
   
-
   mdy <- n.days + as.Date(paste0((YEAR-1), "-11-30"))          
 
   return(list(YMD = mdy,
